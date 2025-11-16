@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Astro Lite – Cloud AI Playground</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="assets/css/base.css" />
+  <link rel="stylesheet" href="assets/css/layout.css" />
+  <link rel="stylesheet" href="assets/css/components.css" />
+  <link rel="stylesheet" href="assets/css/theme-astro.css" />
+</head>
+<body>
+  <header class="astro-header-shell">
+    <div class="astro-header-inner">
+      <div class="astro-logo-wrap">
+        <span class="astro-logo-dot"></span>
+        <span class="astro-logo-text">Astro <span class="astro-logo-lite">Lite</span></span>
+      </div>
+      <nav class="astro-nav">
+        <button class="astro-nav-link" data-nav-target="#home">Home</button>
+        <button class="astro-nav-link" data-nav-target="#chat">Chat</button>
+        <button class="astro-nav-link" data-nav-target="#history">History</button>
+        <button class="astro-nav-link" data-nav-target="#profile">Profile</button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="app-root" class="astro-main-root">
+    <!-- SPA screens will be rendered here -->
+  </main>
+
+  <footer class="astro-footer">
+    <small>Astro Lite · Static AI playground · Built with HTML/CSS/JS</small>
+  </footer>
+
+  <script type="module" src="assets/js/ui/app.js"></script>
+</body>
+</html>

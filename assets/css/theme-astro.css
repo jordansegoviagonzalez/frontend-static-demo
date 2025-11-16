@@ -1,0 +1,137 @@
+.astro-hero-orb-shell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 220px;
+}
+
+.astro-hero-orb {
+  width: 200px;
+  height: 200px;
+  border-radius: 999px;
+  position: relative;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.55), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(112, 243, 255, 0.7), transparent 60%),
+    radial-gradient(circle at 50% 50%, rgba(60, 0, 160, 1), rgba(5, 10, 40, 1));
+  box-shadow:
+    0 0 32px rgba(122, 243, 255, 0.8),
+    0 0 64px rgba(156, 136, 255, 0.7),
+    0 0 120px rgba(0, 0, 0, 0.88);
+  overflow: hidden;
+  animation: astro-orb-pulse 3.2s ease-in-out infinite;
+}
+
+/* inner moving glow layers */
+.astro-hero-orb::before,
+.astro-hero-orb::after {
+  content: "";
+  position: absolute;
+  inset: 8%;
+  border-radius: inherit;
+  background:
+    conic-gradient(
+      from 0deg,
+      rgba(122, 243, 255, 0.0),
+      rgba(122, 243, 255, 0.9),
+      rgba(156, 136, 255, 0.0),
+      rgba(112, 243, 255, 0.8),
+      rgba(122, 243, 255, 0.0)
+    );
+  mix-blend-mode: screen;
+  filter: blur(10px);
+  opacity: 0.9;
+}
+
+.astro-hero-orb::before {
+  animation: astro-orb-wave-1 9s linear infinite;
+}
+
+.astro-hero-orb::after {
+  animation: astro-orb-wave-2 13s linear infinite;
+}
+
+/* shared keyframes */
+@keyframes astro-orb-pulse {
+  0%   { transform: scale(0.96); box-shadow: 0 0 24px rgba(122,243,255,0.6), 0 0 48px rgba(156,136,255,0.6); }
+  50%  { transform: scale(1.04); box-shadow: 0 0 36px rgba(122,243,255,0.9), 0 0 72px rgba(156,136,255,0.8); }
+  100% { transform: scale(0.96); box-shadow: 0 0 24px rgba(122,243,255,0.6), 0 0 48px rgba(156,136,255,0.6); }
+}
+
+@keyframes astro-orb-wave-1 {
+  0%   { transform: rotate(0deg) scale(1.0); }
+  50%  { transform: rotate(180deg) scale(1.04); }
+  100% { transform: rotate(360deg) scale(1.0); }
+}
+
+@keyframes astro-orb-wave-2 {
+  0%   { transform: rotate(0deg) scale(0.98); }
+  50%  { transform: rotate(-180deg) scale(1.03); }
+  100% { transform: rotate(-360deg) scale(0.98); }
+}
+
+/* Thinking orb inside chat */
+.astro-thinking {
+  position: relative;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem 0.4rem 0.4rem;
+}
+
+.astro-thinking.is-visible {
+  display: flex;
+}
+
+.astro-orb-small {
+  width: 90px;
+  height: 90px;
+  border-radius: 999px;
+  position: relative;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.45), transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(112, 243, 255, 0.55), transparent 60%),
+    radial-gradient(circle at 50% 50%, rgba(60, 0, 160, 1), rgba(5, 10, 40, 1));
+  box-shadow:
+    0 0 22px rgba(122, 243, 255, 0.7),
+    0 0 32px rgba(156, 136, 255, 0.55);
+  overflow: hidden;
+  animation: astro-orb-pulse 3.2s ease-in-out infinite;
+}
+
+.astro-orb-small::before,
+.astro-orb-small::after {
+  content: "";
+  position: absolute;
+  inset: 10%;
+  border-radius: inherit;
+  background:
+    conic-gradient(
+      from 0deg,
+      rgba(122, 243, 255, 0.0),
+      rgba(122, 243, 255, 0.9),
+      rgba(156, 136, 255, 0.0),
+      rgba(112, 243, 255, 0.9),
+      rgba(122, 243, 255, 0.0)
+    );
+  mix-blend-mode: screen;
+  filter: blur(8px);
+  opacity: 0.9;
+}
+
+.astro-orb-small::before {
+  animation: astro-orb-wave-1 9s linear infinite;
+}
+
+.astro-orb-small::after {
+  animation: astro-orb-wave-2 13s linear infinite;
+}
+
+.astro-thinking-text {
+  font-size: 0.8rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(220, 230, 255, 0.85);
+}

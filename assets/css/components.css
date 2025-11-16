@@ -1,0 +1,285 @@
+.astro-logo-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.astro-logo-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 30%, #ffffff, #70f3ff);
+  box-shadow:
+    0 0 12px rgba(112, 243, 255, 0.9),
+    0 0 28px rgba(112, 243, 255, 0.6);
+}
+
+.astro-logo-text {
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  color: rgba(225, 230, 255, 0.9);
+}
+
+.astro-logo-lite {
+  padding-left: 0.3rem;
+  font-weight: 500;
+  color: rgba(132, 205, 255, 0.96);
+}
+
+.astro-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.astro-nav-link {
+  border: none;
+  background: transparent;
+  color: rgba(210, 220, 255, 0.7);
+  padding: 0.4rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 160ms ease-out, color 160ms ease-out, transform 120ms ease-out;
+}
+
+.astro-nav-link:hover {
+  background: rgba(90, 120, 255, 0.18);
+  color: rgba(240, 244, 255, 0.98);
+  transform: translateY(-1px);
+}
+
+.astro-nav-link.is-active {
+  background: linear-gradient(120deg, #7af3ff, #9c88ff);
+  color: #050712;
+  box-shadow:
+    0 0 18px rgba(122, 243, 255, 0.6),
+    0 0 28px rgba(156, 136, 255, 0.6);
+}
+
+.astro-pill {
+  border-radius: 999px;
+  padding: 0.2rem 0.7rem;
+  font-size: 0.7rem;
+  border: 1px solid rgba(150, 180, 255, 0.7);
+  background: radial-gradient(circle at top left, rgba(122, 243, 255, 0.3), transparent),
+              rgba(5, 7, 18, 0.9);
+  color: rgba(224, 232, 255, 0.9);
+}
+
+.astro-hero-heading {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 650;
+  letter-spacing: 0.03em;
+}
+
+.astro-hero-subtitle {
+  color: rgba(205, 214, 255, 0.8);
+  font-size: 0.94rem;
+  max-width: 30rem;
+}
+
+.astro-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  border-radius: 999px;
+  border: none;
+  padding: 0.55rem 1.2rem;
+  font-size: 0.86rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 120ms ease-out, box-shadow 160ms ease-out, background 160ms ease-out;
+}
+
+.astro-btn-primary {
+  background: linear-gradient(135deg, #7af3ff, #9c88ff);
+  color: #050712;
+  box-shadow:
+    0 0 22px rgba(122, 243, 255, 0.6),
+    0 0 34px rgba(156, 136, 255, 0.5);
+}
+
+.astro-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 0 32px rgba(122, 243, 255, 0.8),
+    0 0 44px rgba(156, 136, 255, 0.7);
+}
+
+.astro-btn-secondary {
+  background: rgba(18, 22, 48, 0.95);
+  color: rgba(220, 229, 255, 0.9);
+  border: 1px solid rgba(160, 180, 255, 0.5);
+}
+
+.astro-btn-secondary:hover {
+  background: rgba(30, 36, 72, 0.98);
+  transform: translateY(-1px);
+}
+
+.astro-input {
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  border-radius: 12px;
+  border: 1px solid rgba(150, 170, 255, 0.4);
+  background: rgba(7, 9, 24, 0.96);
+  color: rgba(236, 241, 255, 0.96);
+  font-size: 0.88rem;
+}
+
+.astro-input:focus {
+  outline: none;
+  border-color: rgba(122, 243, 255, 0.8);
+  box-shadow: 0 0 0 1px rgba(122, 243, 255, 0.6);
+}
+
+.astro-label {
+  font-size: 0.82rem;
+  color: rgba(200, 210, 255, 0.86);
+  margin-bottom: 0.25rem;
+}
+
+.astro-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.astro-error-text {
+  color: #ff7b8b;
+  font-size: 0.78rem;
+}
+
+.astro-chat-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-height: 320px;
+}
+
+.astro-chat-messages {
+  flex: 1 1 auto;
+  min-height: 220px;
+  max-height: 420px;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.astro-chat-input-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.astro-textarea {
+  flex: 1 1 auto;
+  min-height: 40px;
+  max-height: 120px;
+  resize: vertical;
+  padding: 0.55rem 0.7rem;
+  border-radius: 14px;
+  border: 1px solid rgba(150, 170, 255, 0.4);
+  background: rgba(7, 9, 24, 0.96);
+  color: rgba(236, 241, 255, 0.96);
+  font-size: 0.88rem;
+}
+
+.astro-textarea:focus {
+  outline: none;
+  border-color: rgba(122, 243, 255, 0.8);
+  box-shadow: 0 0 0 1px rgba(122, 243, 255, 0.6);
+}
+
+.astro-chat-send-btn {
+  padding-inline: 0.9rem;
+  height: 40px;
+}
+
+.astro-msg-row {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.astro-msg-row.user {
+  justify-content: flex-end;
+}
+
+.astro-msg-row.assistant {
+  justify-content: flex-start;
+}
+
+.astro-msg-bubble {
+  max-width: min(75%, 460px);
+  padding: 0.5rem 0.7rem;
+  border-radius: 16px;
+  font-size: 0.86rem;
+  line-height: 1.35;
+}
+
+.astro-msg-bubble.user {
+  border-bottom-right-radius: 4px;
+  background: linear-gradient(135deg, #7af3ff, #9c88ff);
+  color: #050712;
+}
+
+.astro-msg-bubble.assistant {
+  border-bottom-left-radius: 4px;
+  background: rgba(16, 22, 52, 0.98);
+  color: rgba(230, 238, 255, 0.96);
+  border: 1px solid rgba(120, 150, 255, 0.4);
+}
+
+.astro-session-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.astro-session-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.55rem 0.65rem;
+  border-radius: 12px;
+  cursor: pointer;
+  background: rgba(10, 12, 28, 0.96);
+  border: 1px solid rgba(120, 140, 255, 0.32);
+  transition: background 120ms ease-out, transform 120ms ease-out, border-color 120ms ease-out;
+}
+
+.astro-session-item:hover {
+  background: rgba(20, 24, 54, 0.98);
+  border-color: rgba(122, 243, 255, 0.6);
+  transform: translateY(-1px);
+}
+
+.astro-session-title {
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
+.astro-session-meta {
+  font-size: 0.75rem;
+  color: rgba(190, 200, 255, 0.75);
+}
+
+.astro-session-actions {
+  display: inline-flex;
+  gap: 0.25rem;
+}
+
+.astro-chip {
+  border-radius: 999px;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.7rem;
+  border: 1px solid rgba(140, 160, 255, 0.55);
+  color: rgba(208, 220, 255, 0.88);
+}

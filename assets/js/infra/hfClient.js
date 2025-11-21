@@ -1,4 +1,5 @@
-import { HF_API_BASE_URL, HF_MODEL_ID, HF_API_KEY, USE_FAKE_AI } from "./config.js";
+// hfClient.js
+import { USE_FAKE_AI, GEMMA_PROXY_URL } from "./config.js";
 
 async function fakeDelay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -6,50 +7,34 @@ async function fakeDelay(ms) {
 
 export const hfClient = {
   async generateText(prompt) {
+    // 1) Demo mode – no real model, safe for offline/local testing
     if (USE_FAKE_AI) {
-      // Simple fake response for local testing without any API key.
       await fakeDelay(900);
-      return "Astro Lite (demo): I received your message and this is a placeholder response. Configure a real model in config.js to enable live AI.";
+      return "Astro Lite (demo): I received your message and this is a placeholder response. Configure the Cloudflare proxy in config.js to enable live AI.";
     }
 
-    if (!HF_API_KEY || HF_API_KEY === "YOUR_HF_API_KEY_HERE") {
-      throw new Error("HF_API_KEY is not configured. Set it in config.js.");
-    }
-
-    const url = `${HF_API_BASE_URL}/models/${encodeURIComponent(HF_MODEL_ID)}`;
-
-    const response = await fetch(url, {
+    // 2) Real mode – call your Cloudflare Worker (which calls Gemma)
+    const response = await fetch(GEMMA_PROXY_URL, {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${HF_API_KEY}`,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        inputs: prompt,
-        parameters: {
-          max_new_tokens: 256,
-          temperature: 0.7
-        }
-      })
+      body: JSON.stringify({ prompt }),
     });
 
     if (!response.ok) {
       const text = await response.text().catch(() => "");
-      throw new Error(`AI request failed: ${response.status} ${text}`);
+      throw new Error(`AI request failed via proxy: ${response.status} ${text}`);
     }
 
     const data = await response.json();
 
-    // Hugging Face text generation usually returns an array with generated_text.
-    if (Array.isArray(data) && data.length > 0 && typeof data[0].generated_text === "string") {
-      return data[0].generated_text;
+    // Worker returns { text: "..." }
+    if (data && typeof data.text === "string") {
+      return data.text;
     }
 
-    if (typeof data === "string") {
-      return data;
-    }
-
-    // Fallback: just stringify.
+    // Fallback: stringify whatever came back
     return JSON.stringify(data);
-  }
+  },
 };

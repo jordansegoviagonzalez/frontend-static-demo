@@ -15,8 +15,7 @@ export function renderHistoryScreen(root) {
         <div>
           <h2 class="astro-screen-title">History</h2>
           <p style="font-size: 0.82rem; color: rgba(190,200,255,0.8);">
-            Sessions are stored only in your browser. In a full app, this view could sit on top
-            of a real database or vector index.
+            Sessions are stored only in your browser.
           </p>
         </div>
         <button class="astro-btn astro-btn-primary" data-new-chat>New chat</button>

@@ -13,8 +13,7 @@ export function renderChatScreen(root, { sessionId } = {}) {
         <div>
           <h2 class="astro-screen-title">Chat with Astro</h2>
           <p style="font-size: 0.82rem; color: rgba(190,200,255,0.8);">
-            Messages in Astro Lite are stored in your browser only. Connect a real model in <code>config.js</code>
-            to turn this into a live AI assistant.
+            Messages in Astro AI are stored in your browser only.
           </p>
         </div>
         <button class="astro-btn astro-btn-secondary" data-open-history>History</button>

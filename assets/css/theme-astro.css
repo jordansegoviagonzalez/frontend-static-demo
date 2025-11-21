@@ -1,6 +1,6 @@
 .astro-hero-orb-shell {
   position: relative;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   min-height: 220px;
@@ -74,15 +74,19 @@
 /* Thinking orb inside chat */
 .astro-thinking {
   position: relative;
-  display: none;
+  display: flex;                 /* layout is fixed */
   flex-direction: column;
   align-items: center;
   gap: 0.75rem;
   padding: 0.9rem 0.4rem 0.4rem;
+  opacity: 0;                    /* hidden by default */
+  pointer-events: none;
+  transition: opacity 0.25s ease-out;
 }
 
 .astro-thinking.is-visible {
-  display: flex;
+  opacity: 1;                    /* shown only while thinking */
+  pointer-events: auto;
 }
 
 .astro-orb-small {
@@ -134,4 +138,58 @@
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: rgba(220, 230, 255, 0.85);
+}
+
+/* Right side of the hero (logo column) */
+.astro-home-visual {
+  display: flex;
+  align-items: center;       /* center vertically in this column */
+  justify-content: center;   /* center horizontally in this column */
+}
+
+/* Inner wrapper around the image */
+.astro-logo-shell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 500px;
+}
+
+/* Logo size knob */
+.astro-logo {
+  width: 600px;      /* <- change this for size */
+  max-width: 600px;
+  height: auto;
+}
+
+/* Profile logo + card on the Profile screen */
+.astro-profile-card-right {
+  display: flex;
+}
+
+.astro-profile-aside-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;      /* left-align content (optional) */
+  justify-content: flex-start;  /* 👈 stick everything to the top */
+  gap: 0.75rem;
+  width: 100%;
+  height: 100%;
+  padding: 1.5rem 1.75rem;      /* padding from the card edges */
+  text-align: left;             /* match left alignment */
+}
+
+
+/* 👇 THIS is the size knob for the Profile logo */
+.astro-profile-logo {
+  width: 300px;   /* change this to 72 / 120 etc. to resize */
+  height: auto;
+  opacity: 0.95;
+}
+
+.astro-profile-aside-text {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: rgba(220, 230, 255, 0.9);
+  max-width: 18rem;
 }

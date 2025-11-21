@@ -42,15 +42,16 @@
   gap: 1.5rem;
 }
 
-.astro-screen-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+.astro-home-title {
+  font-size: 2.4rem;       /* 👈 main size knob for the heading */
+  line-height: 1.1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
 }
 
 .astro-screen-title {
-  font-size: 1.2rem;
+  font-size: 2.4rem;
   font-weight: 600;
 }
 

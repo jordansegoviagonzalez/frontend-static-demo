@@ -1,49 +1,67 @@
-export function renderHomeScreen(root) {
+export function renderHomeScreen(root, appState) {
   root.innerHTML = `
-    <section class="astro-screen astro-two-column">
-      <div class="astro-card astro-flex-col">
-        <header class="astro-screen-header">
-          <div>
-            <h1 class="astro-hero-heading">Your tiny cloud AI lab.</h1>
-            <p class="astro-hero-subtitle">
-              Astro Lite is a front-end–only AI playground. No installs, no backend —
-              just a clean UI talking to a cloud model from your browser.
-            </p>
-          </div>
-          <div class="astro-pill">Lite demo</div>
-        </header>
+    <section class="astro-home">
+      <div class="astro-home-inner">
 
-        <div class="astro-flex-col" style="margin-top: 0.25rem; gap: 0.75rem;">
-          <div class="astro-flex-row" style="flex-wrap: wrap;">
-            <button class="astro-btn astro-btn-primary" data-home-login>Login</button>
-            <button class="astro-btn astro-btn-secondary" data-home-register>Sign up</button>
-            <button class="astro-btn astro-btn-secondary" data-home-guest>Try as guest</button>
+        <div class="astro-home-hero">
+          <div class="astro-home-label-row">
+            <span class="astro-pill astro-pill-demo">DEMO</span>
           </div>
-          <p style="font-size: 0.78rem; color: rgba(190,200,255,0.78); max-width: 28rem;">
-            Lite mode uses your browser's local storage only. For real apps, plug Astro into
-            a backend API and database — the UI stays the same.
+
+          <h1 class="astro-home-title">
+            WELCOME TO ASTRO AI
+          </h1>
+
+          <p class="astro-home-subtitle">
+            A Lite demo from our line of AI models you can use straight from your browser.
+          </p>
+
+          <div class="astro-home-actions">
+            <button class="astro-btn astro-btn-primary" data-home-login>
+              Login
+            </button>
+            <button class="astro-btn astro-btn-secondary" data-home-signup>
+              Sign up
+            </button>
+            <button class="astro-btn astro-btn-ghost" data-home-guest>
+              Try as guest
+            </button>
+          </div>
+
+          <p class="astro-home-footnote">
+            This demo stores everything in your personal browser only for you. 
+      
           </p>
         </div>
-      </div>
+        Please be mindful of your personal information and avoid saving any sensitive details in your Astro AI history.
 
-      <div class="astro-card astro-hero-orb-shell">
-        <div class="astro-hero-orb"></div>
+        <div class="astro-home-visual">
+          <div class="astro-logo-shell">
+            <img
+              src="assets/img/ASTROAI.png"
+              alt="Astro AI logo"
+              class="astro-logo"
+            />
+          </div>
+        </div>
+
       </div>
     </section>
   `;
 
   const loginBtn = root.querySelector("[data-home-login]");
-  const registerBtn = root.querySelector("[data-home-register]");
+  const signupBtn = root.querySelector("[data-home-signup]");
   const guestBtn = root.querySelector("[data-home-guest]");
 
+  // We let the router do its job by changing the hash.
   if (loginBtn) {
     loginBtn.addEventListener("click", () => {
       window.location.hash = "#login";
     });
   }
 
-  if (registerBtn) {
-    registerBtn.addEventListener("click", () => {
+  if (signupBtn) {
+    signupBtn.addEventListener("click", () => {
       window.location.hash = "#register";
     });
   }

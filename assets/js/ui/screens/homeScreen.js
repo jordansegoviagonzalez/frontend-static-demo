@@ -14,6 +14,7 @@ export function renderHomeScreen(root, appState) {
 
           <p class="astro-home-subtitle">
             A Lite demo from our line of AI models you can use straight from your browser.
+            
           </p>
 
           <div class="astro-home-actions">
@@ -29,6 +30,10 @@ export function renderHomeScreen(root, appState) {
           </div>
 
           <p class="astro-home-footnote">
+            The purpose of this app is to let you try the chat UI and talk directly to the AI model. 
+      
+          </p>
+          <p class="astro-home-footnote">
             This demo stores everything in your personal browser only for you. 
       
           </p>
@@ -43,6 +48,7 @@ export function renderHomeScreen(root, appState) {
               class="astro-logo"
             />
           </div>
+          
         </div>
 
       </div>

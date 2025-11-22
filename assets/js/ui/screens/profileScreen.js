@@ -11,8 +11,8 @@ export function renderProfileScreen(root) {
           <h2 class="astro-screen-title">Profile</h2>
           <p style="font-size: 0.82rem; color: rgba(190,200,255,0.8);">
             Update your display name for your Astro AI account. This demo doesn’t 
-            store data on any server. Your information stays in this browser only, 
-            so please avoid entering sensitive personal details.
+            store data on any server. Your information stays in your personal
+            browser only,so please avoid entering sensitive personal details.
           </p>
         </div>
       </header>

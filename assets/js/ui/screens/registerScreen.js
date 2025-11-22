@@ -8,8 +8,8 @@ export function renderRegisterScreen(root) {
           <div>
             <h2 class="astro-screen-title">Create an account</h2>
             <p style="font-size: 0.82rem; color: rgba(190,200,255,0.8);">
-              Accounts live in your own browser's storage. This is a demo-only auth flow —
-              no real passwords are sent over the network.
+            This registration flow is part of a demo version of Astro AI. 
+            It’s meant to show how the application will look and feel once the full product is finished. It does not create real accounts or store personal information.
             </p>
           </div>
         </header>
@@ -46,9 +46,10 @@ export function renderRegisterScreen(root) {
 
       <div class="astro-card">
         <p style="font-size: 0.84rem; color: rgba(190,200,255,0.82);">
-          This registration flow is intentionally simple and local-only. It shows how you might
-          wire Astro Lite into a real authentication backend later, while keeping the UI and
-          routing almost identical.
+          This registration screen is for demo purposes only. 
+          Astro AI doesn’t create real accounts or store your personal data here — 
+          it simply lets you try the chat UI and talk to the AI model. 
+          Please avoid entering personal information.
         </p>
       </div>
     </section>

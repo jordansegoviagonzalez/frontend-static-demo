@@ -12,7 +12,7 @@ export const hfClient = {
       await fakeDelay(900);
       return "Astro Lite (demo): I received your message and this is a placeholder response. Configure the Cloudflare proxy in config.js to enable live AI.";
     }
-
+    
     // 2) Real mode – call your Cloudflare Worker (which calls Gemma)
     const response = await fetch(GEMMA_PROXY_URL, {
       method: "POST",

@@ -1,40 +1,50 @@
 // hfClient.js
-import { USE_FAKE_AI, GEMMA_PROXY_URL } from "./config.js";
+// AstroAI → Cloudflare Worker → OpenAI (no fake/demo mode)
 
-async function fakeDelay(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+import { GEMMA_PROXY_URL } from "./config.js";
 
 export const hfClient = {
+  /**
+   * Send a prompt to the Cloudflare Worker and return the model text.
+   */
   async generateText(prompt) {
-    // 1) Demo mode – no real model, safe for offline/local testing
-    if (USE_FAKE_AI) {
-      await fakeDelay(900);
-      return "Astro Lite (demo): I received your message and this is a placeholder response. Configure the Cloudflare proxy in config.js to enable live AI.";
+    const promptText = String(prompt ?? "").trim();
+    if (!promptText) {
+      throw new Error("Prompt is required.");
     }
-    
-    // 2) Real mode – call your Cloudflare Worker (which calls Gemma)
+
     const response = await fetch(GEMMA_PROXY_URL, {
       method: "POST",
+      mode: "cors",
       headers: {
         "Content-Type": "application/json",
+        "Accept": "application/json",
       },
-      body: JSON.stringify({ prompt }),
+      body: JSON.stringify({ prompt: promptText }),
     });
 
-    if (!response.ok) {
-      const text = await response.text().catch(() => "");
-      throw new Error(`AI request failed via proxy: ${response.status} ${text}`);
+    let data;
+    try {
+      data = await response.json();
+    } catch (err) {
+      const raw = await response.text().catch(() => "");
+      throw new Error(
+        `AI proxy returned non-JSON response (status ${response.status}): ${raw}`,
+      );
     }
 
-    const data = await response.json();
+    if (!response.ok) {
+      const msg = data?.error || data?.message || JSON.stringify(data);
+      throw new Error(
+        `AI request failed via proxy (status ${response.status}): ${msg}`,
+      );
+    }
 
-    // Worker returns { text: "..." }
     if (data && typeof data.text === "string") {
       return data.text;
     }
 
-    // Fallback: stringify whatever came back
     return JSON.stringify(data);
   },
 };
+

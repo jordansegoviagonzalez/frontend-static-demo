@@ -38,8 +38,8 @@ export function renderChatMessages(container, messages, { streamId } = {}) {
       container.appendChild(row);
       newMessagesAdded = true;
       
-      // Start typing effect
-      typeText(bubble, msg.text, container);
+      // Start typing effect (Advanced HTML Typing)
+      typeHtml(bubble, msg.text, container);
     } else {
       // Instant render with Markdown
       bubble.innerHTML = parseMarkdown(msg.text);
@@ -54,24 +54,44 @@ export function renderChatMessages(container, messages, { streamId } = {}) {
   }
 }
 
-function typeText(element, text, scrollContainer) {
-  let index = 0;
-  // Faster typing: 10ms per char
-  const interval = setInterval(() => {
-    if (index < text.length) {
-      element.textContent += text.charAt(index);
-      index++;
-      // Auto-scroll while typing
-      if (scrollContainer) {
-        scrollContainer.scrollTop = scrollContainer.scrollHeight;
+/**
+ * Types out HTML content node-by-node so users see formatted text appearing,
+ * rather than raw Markdown syntax.
+ */
+async function typeHtml(targetElement, rawText, scrollContainer) {
+  const html = parseMarkdown(rawText);
+  
+  // Create a virtual DOM to traverse
+  const tempDiv = document.createElement("div");
+  tempDiv.innerHTML = html;
+
+  // Recursive typing function
+  await typeNode(tempDiv, targetElement, scrollContainer);
+}
+
+async function typeNode(sourceNode, targetNode, scrollContainer) {
+  const nodes = Array.from(sourceNode.childNodes);
+  
+  for (const node of nodes) {
+    if (node.nodeType === 3) { 
+      // TEXT NODE: Type characters one by one
+      const text = node.textContent;
+      for (let i = 0; i < text.length; i++) {
+        targetNode.textContent += text[i];
+        
+        if (scrollContainer) {
+          scrollContainer.scrollTop = scrollContainer.scrollHeight;
+        }
+        // Delay between chars (typing speed)
+        await new Promise(r => setTimeout(r, 8)); 
       }
-    } else {
-      clearInterval(interval);
-      // Finalize: Convert to Markdown once typing is done
-      element.innerHTML = parseMarkdown(text);
-      if (scrollContainer) {
-        scrollContainer.scrollTop = scrollContainer.scrollHeight;
-      }
+    } else if (node.nodeType === 1) {
+      // ELEMENT NODE: Create the tag (e.g. <strong>) then recurse
+      const element = node.cloneNode(false); // shallow clone (no children yet)
+      targetNode.appendChild(element);
+      
+      // Recurse into children
+      await typeNode(node, element, scrollContainer);
     }
-  }, 10);
+  }
 }

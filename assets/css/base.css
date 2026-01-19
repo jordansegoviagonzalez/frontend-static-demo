@@ -6,10 +6,10 @@
 
 /* Global font scale (you can tweak these) */
 :root {
-  --font-size-body: 16px;      /* standard text */
-  --font-size-sm: 14px;        /* notes / labels */
-  --font-size-h1: 38px;        /* big hero titles */
-  --font-size-h2: 24px;        /* section titles */
+  --font-size-body: 17px;      /* Increased from 16px */
+  --font-size-sm: 15px;        /* Increased from 14px */
+  --font-size-h1: 42px;        /* Bigger headings */
+  --font-size-h2: 28px;        /* section titles */
 
   --line-height-body: 1.5;
   --line-height-tight: 1.2;

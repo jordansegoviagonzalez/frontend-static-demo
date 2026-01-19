@@ -1,56 +1,36 @@
 export function renderHomeScreen(root, appState) {
   root.innerHTML = `
-    <section class="astro-home">
-      <div class="astro-home-inner">
+    <section class="astro-screen astro-hero-screen">
+      <div class="astro-hero-content">
+        <img src="assets/img/ASTROAI.png" class="astro-hero-logo" alt="Astro AI Astronaut" />
 
-        <div class="astro-home-hero">
-          <div class="astro-home-label-row">
-            <span class="astro-pill astro-pill-demo">DEMO</span>
-          </div>
-
-          <h1 class="astro-home-title">
-            WELCOME TO ASTRO AI
-          </h1>
-
-          <p class="astro-home-subtitle">
-            A Lite demo from our line of AI models you can use straight from your browser.
-            
-          </p>
-
-          <div class="astro-home-actions">
-            <button class="astro-btn astro-btn-primary" data-home-login>
-              Login
-            </button>
-            <button class="astro-btn astro-btn-secondary" data-home-signup>
-              Sign up
-            </button>
-            <button class="astro-btn astro-btn-ghost" data-home-guest>
-              Try as guest
-            </button>
-          </div>
-
-          <p class="astro-home-footnote">
-            The purpose of this app is to let you try the chat UI and talk directly to the AI model. 
-      
-          </p>
-          <p class="astro-home-footnote">
-            This demo stores everything in your personal browser only for you. 
-      
-          </p>
-        </div>
-        Please be mindful of your personal information and avoid saving any sensitive details in your Astro AI history.
-
-        <div class="astro-home-visual">
-          <div class="astro-logo-shell">
-            <img
-              src="assets/img/ASTROAI.png"
-              alt="Astro AI logo"
-              class="astro-logo"
-            />
-          </div>
-          
+        <div class="astro-pill-row">
+          <span class="astro-pill">Public Beta</span>
         </div>
 
+        <p class="astro-hero-desc">
+          A secure, browser based AI playground. No cloud tracking, no sign up required.
+          Engineered for privacy and performance.
+        </p>
+
+        <div class="astro-hero-actions">
+          <button class="astro-btn astro-btn-primary astro-btn-lg" data-home-guest>
+            Start Chatting
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
+          </button>
+          <div class="astro-auth-links">
+            <button class="astro-link-btn" data-home-login>Login</button>
+            <span class="astro-divider">·</span>
+            <button class="astro-link-btn" data-home-signup>Sign up</button>
+          </div>
+        </div>
+
+        <div class="astro-hero-footnote">
+          <p>
+            This demo runs entirely in your browser using local storage. 
+            <br>No conversation data is sent to our servers.
+          </p>
+        </div>
       </div>
     </section>
   `;
@@ -59,7 +39,6 @@ export function renderHomeScreen(root, appState) {
   const signupBtn = root.querySelector("[data-home-signup]");
   const guestBtn = root.querySelector("[data-home-guest]");
 
-  // We let the router do its job by changing the hash.
   if (loginBtn) {
     loginBtn.addEventListener("click", () => {
       window.location.hash = "#login";

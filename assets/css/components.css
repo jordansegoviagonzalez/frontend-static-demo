@@ -158,18 +158,21 @@
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  min-height: 320px;
+  height: 75vh;
+  min-height: 500px;
+  overflow: hidden; /* Contains the scroll area */
 }
 
 .astro-chat-messages {
   flex: 1 1 auto;
-  min-height: 220px;
-  max-height: 420px;
+  min-height: 0; /* Critical for scrolling inside flex */
   overflow-y: auto;
   padding-right: 0.25rem;
+  padding-bottom: 1rem;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  scroll-behavior: smooth;
 }
 
 .astro-chat-input-row {

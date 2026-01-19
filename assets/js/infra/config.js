@@ -5,11 +5,8 @@ export const USE_FAKE_AI = false;
 export const GEMMA_PROXY_URL =
   "https://astro-gemma-router.segoviajordan91.workers.dev";
 
-// Legacy HF config (kept for future, but NOT used when going through the proxy)
-export const HF_API_BASE_URL = GEMMA_PROXY_URL; // front-end always calls the proxy now
+// Core API Configuration
+export const HF_API_BASE_URL = GEMMA_PROXY_URL; 
 export const HF_MODEL_ID = "google/gemma-2-2b-it";
-// Do NOT put a real key here – the only real key lives in Cloudflare
+// Note: API Key is managed securely by the Cloudflare Worker.
 export const HF_API_KEY = null;
-
-// If later you build your own backend instead of Cloudflare:
-// export const HF_API_BASE_URL = "https://your-backend.example.com";

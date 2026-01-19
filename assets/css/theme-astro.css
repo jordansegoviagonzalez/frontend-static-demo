@@ -6,6 +6,138 @@
   min-height: 220px;
 }
 
+/* --- Hero Screen Polish --- */
+.astro-hero-screen {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.astro-hero-content {
+  text-align: center;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: -80px;
+}
+
+.astro-hero-title {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.astro-text-gradient {
+  background: linear-gradient(135deg, #7af3ff 0%, #a48eff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+.astro-hero-desc {
+  font-size: 1.1rem;
+  color: rgba(190, 210, 255, 0.8);
+  line-height: 1.6;
+  max-width: 480px;
+}
+
+.astro-hero-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.astro-btn-lg {
+  padding: 0.85rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  gap: 0.6rem;
+}
+
+.astro-auth-links {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 0.9rem;
+  color: rgba(160, 180, 255, 0.6);
+}
+
+.astro-link-btn {
+  background: none;
+  border: none;
+  color: rgba(160, 180, 255, 0.8);
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+  transition: color 0.2s;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+}
+.astro-link-btn:hover {
+  color: #fff;
+  text-decoration-color: rgba(122, 243, 255, 0.5);
+}
+
+.astro-hero-footnote {
+  margin-top: 2rem;
+  font-size: 0.8rem;
+  color: rgba(140, 160, 255, 0.4);
+  line-height: 1.4;
+}
+
+/* --- Markdown / Code Styles --- */
+.astro-code-block {
+  background: rgba(8, 10, 24, 0.95);
+  border: 1px solid rgba(120, 140, 255, 0.15);
+  border-radius: 8px;
+  margin: 0.6rem 0;
+  overflow: hidden;
+  font-family: 'Fira Code', 'Roboto Mono', monospace;
+  font-size: 0.82rem;
+  text-align: left;
+}
+
+.astro-code-header {
+  background: rgba(120, 140, 255, 0.08);
+  padding: 0.3rem 0.8rem;
+  font-size: 0.7rem;
+  color: rgba(180, 200, 255, 0.6);
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(120, 140, 255, 0.1);
+}
+
+.astro-code-block code {
+  display: block;
+  padding: 0.8rem;
+  color: #d6deeb;
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+
+.astro-inline-code {
+  background: rgba(122, 243, 255, 0.12);
+  color: #9cdcfe;
+  padding: 0.1rem 0.3rem;
+  border-radius: 4px;
+  font-family: 'Fira Code', 'Roboto Mono', monospace;
+  font-size: 0.9em;
+}
+
+.astro-msg-bubble ul {
+  padding-left: 1.2rem;
+  margin: 0.5rem 0;
+}
+.astro-msg-bubble li {
+  margin-bottom: 0.25rem;
+}
+
 .astro-hero-orb {
   width: 200px;
   height: 200px;
@@ -82,6 +214,7 @@
   opacity: 0;                    /* hidden by default */
   pointer-events: none;
   transition: opacity 0.25s ease-out;
+  flex-shrink: 0; /* Prevent orb from squishing */
 }
 
 .astro-thinking.is-visible {
@@ -90,8 +223,8 @@
 }
 
 .astro-orb-small {
-  width: 90px;
-  height: 90px;
+  width: 140px; /* Increased from 90px */
+  height: 140px;
   border-radius: 999px;
   position: relative;
   background:
@@ -103,6 +236,21 @@
     0 0 32px rgba(156, 136, 255, 0.55);
   overflow: hidden;
   animation: astro-orb-pulse 3.2s ease-in-out infinite;
+}
+/* ... keep inner orb styles ... */
+
+.astro-hero-logo {
+  width: 600px;
+  height: auto;
+  margin-bottom: -9rem;
+  filter: drop-shadow(0 0 30px rgba(112, 243, 255, 0.4));
+  animation: floatLogo 6s ease-in-out infinite;
+}
+
+@keyframes floatLogo {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
 }
 
 .astro-orb-small::before,

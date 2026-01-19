@@ -10,13 +10,32 @@ export function renderChatScreen(root, { sessionId } = {}) {
   root.innerHTML = `
     <section class="astro-screen">
       <header class="astro-screen-header">
-        <div>
-          <h2 class="astro-screen-title">Chat with Astro</h2>
-          <p style="font-size: 0.82rem; color: rgba(190,200,255,0.8);">
-            Messages in Astro AI are stored in your browser only.
-          </p>
+        <div class="astro-model-selector-wrapper">
+          <button class="astro-model-trigger" data-model-trigger>
+            <span class="astro-model-name" data-current-model-name>Astro Basic</span>
+            <svg class="astro-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 9l6 6 6-6" />
+            </svg>
+          </button>
+          
+          <div class="astro-model-dropdown" hidden data-model-dropdown>
+            <button class="astro-model-option active" data-model-id="gemma-2b">
+              <div class="astro-opt-row">
+                <span>Astro Basic</span>
+                <span class="astro-tag">Free</span>
+              </div>
+              <span class="astro-opt-desc">Great for everyday tasks. Fast.</span>
+            </button>
+            
+            <button class="astro-model-option" data-model-id="gpt-4" disabled>
+              <div class="astro-opt-row">
+                <span>Astro Pro</span>
+                <svg class="astro-lock-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              </div>
+              <span class="astro-opt-desc">Complex reasoning & coding. Upgrade to unlock.</span>
+            </button>
+          </div>
         </div>
-        <button class="astro-btn astro-btn-secondary" data-open-history>History</button>
       </header>
 
       <div class="astro-card astro-chat-shell">
@@ -32,6 +51,9 @@ export function renderChatScreen(root, { sessionId } = {}) {
             class="astro-textarea"
             placeholder="Ask Astro anything..."
             data-astro-input
+            spellcheck="true"
+            autocorrect="on"
+            autocapitalize="sentences"
           ></textarea>
           <button class="astro-btn astro-btn-primary astro-chat-send-btn" data-astro-send>Send</button>
         </div>
@@ -45,17 +67,43 @@ export function renderChatScreen(root, { sessionId } = {}) {
   initThinkingIndicator(root);
   renderChatMessages(messagesEl, session.messages);
 
+  // -- Model Selector Logic --
+  const trigger = root.querySelector("[data-model-trigger]");
+  const dropdown = root.querySelector("[data-model-dropdown]");
+  
+  if (trigger && dropdown) {
+    trigger.addEventListener("click", (e) => {
+      e.stopPropagation();
+      dropdown.hidden = !dropdown.hidden;
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!dropdown.hidden && !trigger.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.hidden = true;
+      }
+    });
+  }
+  // -- End Model Selector Logic --
+
   bindChatInput(root, {
     onSend: async (text) => {
+      // Generate ID upfront to prevent double-rendering (optimistic vs real)
+      const tempId = Math.random().toString(36).slice(2) + Date.now().toString(36);
+      
       renderChatMessages(messagesEl, [
         ...session.messages,
-        { role: "user", text }
+        { role: "user", text, id: tempId }
       ]);
 
       showThinking();
       try {
-        const result = await chatService.sendMessage({ sessionId: session.id, userText: text });
-        renderChatMessages(messagesEl, result.session.messages);
+        const result = await chatService.sendMessage({ 
+          sessionId: session.id, 
+          userText: text,
+          userMessageId: tempId 
+        });
+        // Pass streamId to trigger the typing animation for the new AI message
+        renderChatMessages(messagesEl, result.session.messages, { streamId: result.reply.id });
       } catch (err) {
         console.error(err);
         const errorMsg = {

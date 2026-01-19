@@ -1,0 +1,125 @@
+/* Model Selector (ChatGPT Style) */
+.astro-screen-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.astro-model-selector-wrapper {
+  position: relative;
+  z-index: 50; /* Ensure dropdown floats above chat */
+}
+
+.astro-model-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: transparent;
+  border: none;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: rgba(240, 244, 255, 0.95);
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.astro-model-trigger:hover {
+  background: rgba(140, 160, 255, 0.1);
+}
+
+.astro-model-name {
+  background: linear-gradient(to right, #ffffff, #b0c4ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.astro-chevron {
+  opacity: 0.6;
+  margin-top: 2px;
+}
+
+/* Dropdown Menu */
+.astro-model-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 0.5rem;
+  width: 260px;
+  background: rgba(16, 20, 45, 0.98);
+  border: 1px solid rgba(140, 160, 255, 0.15);
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(20px);
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  transform-origin: top left;
+  animation: scaleIn 0.15s ease-out;
+}
+
+.astro-model-dropdown[hidden] {
+  display: none;
+}
+
+.astro-model-option {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.1rem;
+  padding: 0.6rem 0.8rem;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s ease;
+}
+
+.astro-model-option:hover:not(:disabled) {
+  background: rgba(140, 160, 255, 0.08);
+}
+
+.astro-model-option.active {
+  background: rgba(140, 160, 255, 0.12);
+}
+
+.astro-model-option:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.astro-opt-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #fff;
+}
+
+.astro-opt-desc {
+  font-size: 0.75rem;
+  color: rgba(190, 200, 255, 0.6);
+}
+
+.astro-tag {
+  font-size: 0.65rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  background: rgba(140, 160, 255, 0.2);
+  color: #b0c4ff;
+}
+
+.astro-lock-icon {
+  color: #ff9ca6;
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}

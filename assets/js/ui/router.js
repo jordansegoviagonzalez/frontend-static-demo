@@ -1,10 +1,3 @@
-import { renderHomeScreen } from "./screens/homeScreen.js";
-import { renderLoginScreen } from "./screens/loginScreen.js";
-import { renderRegisterScreen } from "./screens/registerScreen.js";
-import { renderChatScreen } from "./screens/chatScreen.js";
-import { renderHistoryScreen } from "./screens/historyScreen.js";
-import { renderProfileScreen } from "./screens/profileScreen.js";
-
 let rootEl = null;
 
 function normalizeHash(hash) {
@@ -26,35 +19,64 @@ export function updateNavFromHash() {
   });
 }
 
-function renderRoute() {
+async function renderRoute() {
   if (!rootEl) return;
   const hash = normalizeHash(window.location.hash);
   const [path, maybeId] = hash.slice(1).split("/"); // remove '#'
 
-  rootEl.innerHTML = "";
+  // Simple loading indicator if desired, or just keep previous screen until load
+  // rootEl.innerHTML = '<div class="loading-spinner"></div>'; 
 
   switch (path) {
-    case "home":
+    case "home": {
+      const { renderHomeScreen } = await import("./screens/homeScreen.js");
+      rootEl.innerHTML = ""; 
       renderHomeScreen(rootEl);
+      if (rootEl.firstElementChild) rootEl.firstElementChild.classList.add("astro-fade-in");
       break;
-    case "login":
+    }
+    case "login": {
+      const { renderLoginScreen } = await import("./screens/loginScreen.js");
+      rootEl.innerHTML = "";
       renderLoginScreen(rootEl);
+      if (rootEl.firstElementChild) rootEl.firstElementChild.classList.add("astro-fade-in");
       break;
-    case "register":
+    }
+    case "register": {
+      const { renderRegisterScreen } = await import("./screens/registerScreen.js");
+      rootEl.innerHTML = "";
       renderRegisterScreen(rootEl);
+      if (rootEl.firstElementChild) rootEl.firstElementChild.classList.add("astro-fade-in");
       break;
-    case "chat":
+    }
+    case "chat": {
+      const { renderChatScreen } = await import("./screens/chatScreen.js");
+      rootEl.innerHTML = "";
       renderChatScreen(rootEl, { sessionId: maybeId || null });
+      if (rootEl.firstElementChild) rootEl.firstElementChild.classList.add("astro-fade-in");
       break;
-    case "history":
+    }
+    case "history": {
+      const { renderHistoryScreen } = await import("./screens/historyScreen.js");
+      rootEl.innerHTML = "";
       renderHistoryScreen(rootEl);
+      if (rootEl.firstElementChild) rootEl.firstElementChild.classList.add("astro-fade-in");
       break;
-    case "profile":
+    }
+    case "profile": {
+      const { renderProfileScreen } = await import("./screens/profileScreen.js");
+      rootEl.innerHTML = "";
       renderProfileScreen(rootEl);
+      if (rootEl.firstElementChild) rootEl.firstElementChild.classList.add("astro-fade-in");
       break;
-    default:
+    }
+    default: {
+      const { renderHomeScreen } = await import("./screens/homeScreen.js");
+      rootEl.innerHTML = "";
       renderHomeScreen(rootEl);
+      if (rootEl.firstElementChild) rootEl.firstElementChild.classList.add("astro-fade-in");
       break;
+    }
   }
 
   updateNavFromHash();

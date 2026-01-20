@@ -42,7 +42,7 @@
   border-radius: 999px;
   font-size: 0.8rem;
   cursor: pointer;
-  transition: background 160ms ease-out, color 160ms ease-out, transform 120ms ease-out;
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .astro-nav-link:hover {
@@ -51,12 +51,17 @@
   transform: translateY(-1px);
 }
 
+.astro-nav-link:active {
+  transform: translateY(0px) scale(0.96);
+}
+
 .astro-nav-link.is-active {
   background: linear-gradient(120deg, #7af3ff, #9c88ff);
   color: #050712;
   box-shadow:
     0 0 18px rgba(122, 243, 255, 0.6),
     0 0 28px rgba(156, 136, 255, 0.6);
+  transform: translateY(0);
 }
 
 .astro-pill {
@@ -92,7 +97,13 @@
   font-size: 0.95rem;
   font-weight: 500;
   cursor: pointer;
-  transition: transform 120ms ease-out, box-shadow 160ms ease-out, background 160ms ease-out;
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.astro-btn:active {
+  transform: scale(0.96);
 }
 
 .astro-btn-primary {
@@ -104,10 +115,14 @@
 }
 
 .astro-btn-primary:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
   box-shadow:
     0 0 32px rgba(122, 243, 255, 0.8),
     0 0 44px rgba(156, 136, 255, 0.7);
+}
+
+.astro-btn-primary:active {
+  transform: translateY(0) scale(0.97);
 }
 
 .astro-btn-secondary {
@@ -118,7 +133,41 @@
 
 .astro-btn-secondary:hover {
   background: rgba(30, 36, 72, 0.98);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  border-color: rgba(160, 180, 255, 0.8);
+}
+
+.astro-btn-secondary:active {
+  transform: translateY(0) scale(0.97);
+}
+
+/* Copy Button for Code Blocks */
+.astro-code-block {
+  position: relative;
+}
+
+.astro-copy-btn {
+  position: absolute;
+  top: 0.3rem;
+  right: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(220, 230, 255, 0.8);
+  border-radius: 4px;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.65rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  z-index: 5;
+}
+
+.astro-copy-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.astro-copy-btn:active {
+  transform: scale(0.95);
 }
 
 .astro-input {

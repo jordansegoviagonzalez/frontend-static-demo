@@ -8,10 +8,9 @@ export function renderHomeScreen(root, appState) {
           <span class="astro-pill">Public Beta</span>
         </div>
 
-        <p class="astro-hero-desc">
-          A secure, browser based AI playground. No cloud tracking, no sign up required.
-          Engineered for privacy and performance.
-        </p>
+      <p style="font-size: 1.1rem; color: rgba(190,200,255,0.7); max-width: 500px; margin: 0 auto;">
+        Secure. Private. Enterprise AI.
+      </p>
 
         <div class="astro-hero-actions">
           <button class="astro-btn astro-btn-primary astro-btn-lg" data-home-guest>
@@ -27,8 +26,8 @@ export function renderHomeScreen(root, appState) {
 
         <div class="astro-hero-footnote">
           <p>
-            This demo runs entirely in your browser using local storage. 
-            <br>No conversation data is sent to our servers.
+            Enterprise-grade security. 
+            <br>Your data remains private and encrypted.
           </p>
         </div>
       </div>

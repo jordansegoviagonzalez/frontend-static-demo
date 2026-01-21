@@ -12,7 +12,7 @@ export function renderChatScreen(root, { sessionId } = {}) {
       <header class="astro-screen-header">
         <div class="astro-model-selector-wrapper">
           <button class="astro-model-trigger" data-model-trigger>
-            <span class="astro-model-name" data-current-model-name>Astro Basic</span>
+            <span class="astro-model-name" data-current-model-name>Astro Beta</span>
             <svg class="astro-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M6 9l6 6 6-6" />
             </svg>
@@ -21,7 +21,7 @@ export function renderChatScreen(root, { sessionId } = {}) {
           <div class="astro-model-dropdown" hidden data-model-dropdown>
             <button class="astro-model-option active" data-model-id="gemma-2b">
               <div class="astro-opt-row">
-                <span>Astro Basic</span>
+                <span>Astro Beta</span>
                 <span class="astro-tag">Free</span>
               </div>
               <span class="astro-opt-desc">Great for everyday tasks. Fast.</span>

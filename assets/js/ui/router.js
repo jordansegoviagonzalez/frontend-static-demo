@@ -24,7 +24,33 @@ async function renderRoute() {
   const hash = normalizeHash(window.location.hash);
   const [path, maybeId] = hash.slice(1).split("/"); // remove '#'
 
-  // 1. Exit Animation
+  // 1. Start loading the module immediately (Parallel)
+  let loadPromise = null;
+  switch (path) {
+    case "home":
+      loadPromise = import("./screens/homeScreen.js").then(m => () => m.renderHomeScreen(rootEl));
+      break;
+    case "login":
+      loadPromise = import("./screens/loginScreen.js").then(m => () => m.renderLoginScreen(rootEl));
+      break;
+    case "register":
+      loadPromise = import("./screens/registerScreen.js").then(m => () => m.renderRegisterScreen(rootEl));
+      break;
+    case "chat":
+      loadPromise = import("./screens/chatScreen.js").then(m => () => m.renderChatScreen(rootEl, { sessionId: maybeId || null }));
+      break;
+    case "history":
+      loadPromise = import("./screens/historyScreen.js").then(m => () => m.renderHistoryScreen(rootEl));
+      break;
+    case "profile":
+      loadPromise = import("./screens/profileScreen.js").then(m => () => m.renderProfileScreen(rootEl));
+      break;
+    default:
+      loadPromise = import("./screens/homeScreen.js").then(m => () => m.renderHomeScreen(rootEl));
+      break;
+  }
+
+  // 2. Exit Animation
   const currentScreen = rootEl.firstElementChild;
   if (currentScreen) {
     currentScreen.classList.remove("astro-fade-in");
@@ -33,52 +59,14 @@ async function renderRoute() {
     await new Promise(resolve => setTimeout(resolve, 240));
   }
 
-  // 2. Prepare Render Function
-  let renderer = null;
-  
-  switch (path) {
-    case "home": {
-      const module = await import("./screens/homeScreen.js");
-      renderer = () => module.renderHomeScreen(rootEl);
-      break;
-    }
-    case "login": {
-      const module = await import("./screens/loginScreen.js");
-      renderer = () => module.renderLoginScreen(rootEl);
-      break;
-    }
-    case "register": {
-      const module = await import("./screens/registerScreen.js");
-      renderer = () => module.renderRegisterScreen(rootEl);
-      break;
-    }
-    case "chat": {
-      const module = await import("./screens/chatScreen.js");
-      renderer = () => module.renderChatScreen(rootEl, { sessionId: maybeId || null });
-      break;
-    }
-    case "history": {
-      const module = await import("./screens/historyScreen.js");
-      renderer = () => module.renderHistoryScreen(rootEl);
-      break;
-    }
-    case "profile": {
-      const module = await import("./screens/profileScreen.js");
-      renderer = () => module.renderProfileScreen(rootEl);
-      break;
-    }
-    default: {
-      const module = await import("./screens/homeScreen.js");
-      renderer = () => module.renderHomeScreen(rootEl);
-      break;
-    }
-  }
+  // 3. Await the renderer (should be ready by now)
+  const renderer = await loadPromise;
 
-  // 3. Swap Content
+  // 4. Swap Content
   rootEl.innerHTML = "";
   if (renderer) renderer();
 
-  // 4. Enter Animation
+  // 5. Enter Animation
   if (rootEl.firstElementChild) {
     rootEl.firstElementChild.classList.add("astro-fade-in");
   }

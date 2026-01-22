@@ -26,7 +26,7 @@ export function renderHomeScreen(root, appState) {
 
         <div class="astro-hero-footnote">
           <p>
-            This version of Astro does not store data on any server. Your information stays in your personal browser secure and encrypted only for you.
+            This version of AstroAI does not store data on any server. Your information stays in your personal browser secure and encrypted only for you.
           </p>
         </div>
       </div>

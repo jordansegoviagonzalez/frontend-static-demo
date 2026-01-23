@@ -42,7 +42,11 @@ export function renderChatMessages(container, messages, { streamId } = {}) {
       typeHtml(bubble, msg.text, container);
     } else {
       // Instant render with Markdown
-      bubble.innerHTML = parseMarkdown(msg.text);
+      if (msg.type === 'limit') {
+         bubble.innerHTML = msg.text; // Trust the text for this specific system type
+      } else {
+         bubble.innerHTML = parseMarkdown(msg.text);
+      }
       row.appendChild(bubble);
       container.appendChild(row);
       newMessagesAdded = true;

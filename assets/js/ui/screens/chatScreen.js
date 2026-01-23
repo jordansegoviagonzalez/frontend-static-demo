@@ -4,6 +4,8 @@ import { renderChatMessages } from "../components/chatMessageList.js";
 import { bindChatInput } from "../components/chatInputBar.js";
 import { initThinkingIndicator, showThinking, hideThinking } from "../thinkingIndicator.js";
 
+import { userService } from "../../core/userService.js";
+
 export function renderChatScreen(root, { sessionId } = {}) {
   const session = sessionService.getSessionById(sessionId) || sessionService.createSession({ title: "New chat" });
 
@@ -87,6 +89,28 @@ export function renderChatScreen(root, { sessionId } = {}) {
 
   bindChatInput(root, {
     onSend: async (text) => {
+      // -- Auth Check: One Message Limit for Guests --
+      const currentUser = userService.getCurrentUser();
+      if (!currentUser) {
+        const userMsgCount = session.messages.filter(m => m.role === "user").length;
+        if (userMsgCount >= 1) {
+          const limitMsg = {
+            id: Date.now().toString(),
+            role: "assistant",
+            type: "limit",
+            text: `
+              <div style="display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-start;">
+                <span>Sign up or Sign in to continue your unlimited intelligence.</span>
+                <a href="#login" class="astro-btn astro-btn-primary" style="text-decoration: none; padding: 0.4rem 1rem; font-size: 0.8rem;">Sign Up</a>
+              </div>
+            `
+          };
+          renderChatMessages(messagesEl, [...session.messages, limitMsg]);
+          return; // <--- CRITICAL: Stops execution here. No message sent to model.
+        }
+      }
+      // -- End Auth Check --
+
       // Generate ID upfront to prevent double-rendering (optimistic vs real)
       const tempId = Math.random().toString(36).slice(2) + Date.now().toString(36);
       
@@ -102,8 +126,40 @@ export function renderChatScreen(root, { sessionId } = {}) {
           userText: text,
           userMessageId: tempId 
         });
+        
+        // -- CRITICAL FIX: Update local session state so next Auth Check sees the new messages --
+        session.messages = result.session.messages;
+        session.id = result.session.id; // In case it was a new session that got a real ID
+        // -------------------------------------------------------------------------------------
+
         // Pass streamId to trigger the typing animation for the new AI message
         renderChatMessages(messagesEl, result.session.messages, { streamId: result.reply.id });
+
+        // -- PROACTIVE LIMIT NOTIFICATION --
+        // If guest just finished their 1 free message, show the limit alert immediately.
+        if (!userService.getCurrentUser()) {
+           const userMsgCount = result.session.messages.filter(m => m.role === "user").length;
+           if (userMsgCount >= 1) {
+             const limitMsg = {
+               id: "limit-" + Date.now(),
+               role: "assistant",
+               type: "limit", // Custom type for HTML rendering
+               text: `
+                 <div style="display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-start; margin-top: 1rem;">
+                   <span style="color: #ff8e8e;">You've reached your current limit.</span>
+                   <span>Sign up or Sign in to continue your unlimited intelligence.</span>
+                   <a href="#login" class="astro-btn astro-btn-primary" style="text-decoration: none; padding: 0.4rem 1rem; font-size: 0.8rem;">Sign Up / Log In</a>
+                 </div>
+               `
+             };
+             // Add a small delay so it appears after the AI starts typing/finishes
+             setTimeout(() => {
+                renderChatMessages(messagesEl, [...result.session.messages, limitMsg]);
+             }, 2000); 
+           }
+        }
+        // ----------------------------------
+
       } catch (err) {
         console.error(err);
         const errorMsg = {

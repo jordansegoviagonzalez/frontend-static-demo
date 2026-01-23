@@ -1,6 +1,29 @@
 import { sessionService } from "../../core/sessionService.js";
+import { userService } from "../../core/userService.js";
 
 export function renderHistoryScreen(root) {
+  // -- Auth Check --
+  const currentUser = userService.getCurrentUser();
+  if (!currentUser) {
+    root.innerHTML = `
+      <section class="astro-screen">
+        <header class="astro-screen-header">
+          <h2 class="astro-screen-title">History</h2>
+        </header>
+        <div class="astro-card" style="text-align: center; padding: 3rem 1rem;">
+          <p style="font-size: 1.1rem; margin-bottom: 1.5rem; color: rgba(190,200,255,0.9);">
+            Please sign in to view your chat history.
+          </p>
+          <button class="astro-btn astro-btn-primary" onclick="window.location.hash='#login'">
+            Sign In
+          </button>
+        </div>
+      </section>
+    `;
+    return;
+  }
+  // -- End Auth Check --
+
   const sessions = sessionService.getAllSessions();
 
   const listHtml = sessions.length === 0

@@ -3,6 +3,27 @@ import { userService } from "../../core/userService.js";
 export function renderProfileScreen(root) {
   const current = userService.getCurrentUser();
 
+  // -- Auth Check --
+  if (!current) {
+    root.innerHTML = `
+      <section class="astro-screen">
+        <header class="astro-screen-header">
+          <h2 class="astro-screen-title">Profile</h2>
+        </header>
+        <div class="astro-card" style="text-align: center; padding: 3rem 1rem;">
+          <p style="font-size: 1.1rem; margin-bottom: 1.5rem; color: rgba(190,200,255,0.9);">
+            Please sign in to view your profile.
+          </p>
+          <button class="astro-btn astro-btn-primary" onclick="window.location.hash='#login'">
+            Sign In
+          </button>
+        </div>
+      </section>
+    `;
+    return;
+  }
+  // -- End Auth Check --
+
   root.innerHTML = `
   <section class="astro-screen astro-two-column">
     <div class="astro-card astro-flex-col">

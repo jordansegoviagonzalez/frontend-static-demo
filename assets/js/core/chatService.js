@@ -64,15 +64,22 @@ export const chatService = {
 
     session.messages.push(aiMsg);
     session.updatedAt = nowIso();
-    session = sessionService.saveSession(session);
-
+    
     // -- Auto-Titling (Background Task) --
-    // If this is the first exchange, generate a smart title
-    if (session.messages.length <= 2 && session.title === "New chat") {
-      this.generateTitle(session.id, userText).catch(err => {
+    // If title is still default, generate one based on the FIRST user message
+    if (session.title === "New chat") {
+      // We don't await this so the UI response is fast.
+      // But we do need to save the session AGAIN after this finishes in the background.
+      this.generateTitle(session.id, userText).then(newTitle => {
+        if (newTitle) {
+          console.log(`Auto-titled session ${session.id} to: ${newTitle}`);
+        }
+      }).catch(err => {
         console.warn("Failed to auto-title session:", err);
       });
     }
+
+    session = sessionService.saveSession(session);
 
     return { session, reply: aiMsg };
   },
@@ -83,21 +90,20 @@ export const chatService = {
    * @param {string} userText
    */
   async generateTitle(sessionId, userText) {
-    // Keep it cheap and fast: ask for a very short summary
     const prompt = `
 <start_of_turn>user
-Generate a short, concise title (maximum 5 words) for this chat message. Do not use quotes.
+Summarize this message into a short 3-5 word title. Do not use quotes.
 Message: "${userText}"<end_of_turn>
 <start_of_turn>model
 `;
     
     let title = await hfClient.generateText(prompt);
-    
-    // Cleanup: Remove quotes or extra whitespace if the model adds them
     title = title.replace(/["']/g, "").trim();
     
     if (title) {
       sessionService.renameSession(sessionId, title);
+      return title;
     }
+    return null;
   }
 };

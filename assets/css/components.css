@@ -224,9 +224,11 @@
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  height: 75vh;
-  min-height: 500px;
+  /* Fix: Use dvh for mobile, subtract header + margins (~140px) */
+  height: calc(100dvh - 140px);
+  min-height: 0;
   overflow: hidden; /* Contains the scroll area */
+  position: relative;
 }
 
 .astro-chat-messages {
@@ -241,10 +243,14 @@
   scroll-behavior: smooth;
 }
 
+/* Fix: Input bar must be full width and respect safe area */
 .astro-chat-input-row {
   display: flex;
   align-items: flex-end;
   gap: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 .astro-textarea {

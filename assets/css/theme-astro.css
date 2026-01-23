@@ -208,20 +208,19 @@
 /* Thinking orb inside chat */
 .astro-thinking {
   position: relative;
-  display: flex;                 /* layout is fixed */
+  display: none;                 /* Fix: Zero layout space when inactive */
   flex-direction: column;
   align-items: center;
   gap: 0.75rem;
   padding: 0.9rem 0.4rem 0.4rem;
-  opacity: 0;                    /* hidden by default */
-  pointer-events: none;
-  transition: opacity 0.25s ease-out;
-  flex-shrink: 0; /* Prevent orb from squishing */
+  /* Removed opacity transition since display:none breaks it */
+  flex-shrink: 0; 
 }
 
 .astro-thinking.is-visible {
-  opacity: 1;                    /* shown only while thinking */
+  display: flex;                 /* Fix: Only take space when active */
   pointer-events: auto;
+  animation: fadeInUp 0.3s ease-out; /* Add entry animation for smoothness */
 }
 
 .astro-orb-small {

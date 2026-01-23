@@ -244,8 +244,8 @@
 .astro-hero-logo {
   width: 600px;
   height: auto;
-  margin-top: -8rem; /* Shift logo higher */
-  margin-bottom: -15rem;
+  margin-top: -6rem; /* Shift logo higher */
+  margin-bottom: -20rem;
   filter: drop-shadow(0 0 30px rgba(112, 243, 255, 0.4));
   animation: floatLogo 6s ease-in-out infinite;
   pointer-events: none;

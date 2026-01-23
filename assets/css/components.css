@@ -239,6 +239,7 @@
   padding-bottom: 1rem;
   display: flex;
   flex-direction: column;
+  justify-content: flex-end; /* Fix: Pin messages to bottom */
   gap: 0.5rem;
   scroll-behavior: smooth;
 }

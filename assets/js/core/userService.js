@@ -2,6 +2,10 @@ import { storage } from "../infra/storage.js";
 import { createUser } from "./models.js";
 import { validateEmail, validatePassword, validateDisplayName } from "./validators.js";
 
+// Set to true if you have the Cloudflare Worker running
+const USE_REMOTE_BACKEND = false;
+const API_BASE = "http://localhost:8787/api/auth";
+
 function generateId() {
   return Math.random().toString(36).slice(2) + Date.now().toString(36);
 }
@@ -15,8 +19,26 @@ function hashPassword(password) {
   return btoa(password);
 }
 
+// Simulate network delay
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 export const userService = {
-  register({ name, email, password }) {
+  async register({ name, email, password }) {
+    if (USE_REMOTE_BACKEND) {
+      const res = await fetch(`${API_BASE}/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password })
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Registration failed");
+      }
+      return await res.json();
+    }
+
+    // Local Mock Logic
+    await delay(600);
     const errors = {};
     const emailError = validateEmail(email);
     if (emailError) errors.email = emailError;
@@ -53,7 +75,25 @@ export const userService = {
     return { id: user.id, name: user.name, email: user.email };
   },
 
-  login({ email, password }) {
+  async login({ email, password }) {
+    if (USE_REMOTE_BACKEND) {
+      const res = await fetch(`${API_BASE}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Login failed");
+      }
+      const data = await res.json();
+      storage.setCurrentUser(data.user);
+      // store token if needed: localStorage.setItem('auth_token', data.token);
+      return data.user;
+    }
+
+    // Local Mock Logic
+    await delay(500);
     const errors = {};
     const emailError = validateEmail(email);
     if (emailError) errors.email = emailError;
@@ -68,10 +108,13 @@ export const userService = {
 
     const users = storage.loadUsers();
     const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+    
+    // For demo convenience, if user doesn't exist but creds are valid format, mock success 
+    // (This is a design choice for the demo to be frictionless, user requested "secure" so we should strict check)
     if (!user || user.passwordHash !== hashPassword(password)) {
-      const err = new Error("Invalid credentials");
-      err.validationErrors = { email: "Invalid email or password." };
-      throw err;
+       const err = new Error("Invalid credentials");
+       err.validationErrors = { email: "Invalid email or password." };
+       throw err;
     }
 
     storage.setCurrentUser({ id: user.id, name: user.name, email: user.email });

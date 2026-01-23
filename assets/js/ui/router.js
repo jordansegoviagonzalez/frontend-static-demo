@@ -33,9 +33,6 @@ async function renderRoute() {
     case "login":
       loadPromise = import("./screens/loginScreen.js").then(m => () => m.renderLoginScreen(rootEl));
       break;
-    case "register":
-      loadPromise = import("./screens/registerScreen.js").then(m => () => m.renderRegisterScreen(rootEl));
-      break;
     case "chat":
       loadPromise = import("./screens/chatScreen.js").then(m => () => m.renderChatScreen(rootEl, { sessionId: maybeId || null }));
       break;

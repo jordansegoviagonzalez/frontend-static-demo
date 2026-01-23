@@ -21,7 +21,7 @@
   flex-direction: column;
   align-items: center;
   gap: 0.4rem;
-  margin-top: -80px;
+  margin-top: -140px;
 }
 
 .astro-hero-title {
@@ -52,6 +52,8 @@
   align-items: center;
   gap: 1rem;
   margin-top: 1rem;
+  position: relative;
+  z-index: 10;
 }
 
 .astro-btn-lg {
@@ -64,8 +66,8 @@
 .astro-auth-links {
   display: flex;
   align-items: center;
-  gap: 0.8rem;
-  font-size: 0.9rem;
+  gap: 1.2rem;
+  font-size: 1.1rem;
   color: rgba(160, 180, 255, 0.6);
 }
 
@@ -240,11 +242,12 @@
 /* ... keep inner orb styles ... */
 
 .astro-hero-logo {
-  width: 600px;
+  width: 800px;
   height: auto;
-  margin-bottom: -9rem;
+  margin-bottom: -15rem;
   filter: drop-shadow(0 0 30px rgba(112, 243, 255, 0.4));
   animation: floatLogo 6s ease-in-out infinite;
+  pointer-events: none;
 }
 
 @keyframes floatLogo {
@@ -305,8 +308,8 @@
 
 /* Logo size knob */
 .astro-logo {
-  width: 600px;      /* <- change this for size */
-  max-width: 600px;
+  width: 800px;      /* <- change this for size */
+  max-width: 800px;
   height: auto;
 }
 

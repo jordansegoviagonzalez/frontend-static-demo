@@ -23,12 +23,6 @@ export function renderHomeScreen(root, appState) {
             <button class="astro-link-btn" data-home-signup>Sign up</button>
           </div>
         </div>
-
-        <div class="astro-hero-footnote">
-          <p>
-            This version of AstroAI does not store data on any server. Your information stays in your personal browser secure and encrypted only for you.
-          </p>
-        </div>
       </div>
     </section>
   `;
@@ -45,7 +39,7 @@ export function renderHomeScreen(root, appState) {
 
   if (signupBtn) {
     signupBtn.addEventListener("click", () => {
-      window.location.hash = "#register";
+      window.location.hash = "#login";
     });
   }
 

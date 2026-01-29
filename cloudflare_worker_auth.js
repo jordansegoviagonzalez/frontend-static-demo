@@ -24,6 +24,9 @@ export default {
     const path = url.pathname;
 
     try {
+      if (path === "/" && request.method === "POST") {
+        return await handleChat(request, env);
+      }
       if (path === "/api/auth/login" && request.method === "POST") {
         return await handleLogin(request, env);
       }
@@ -117,4 +120,77 @@ function handleSocialLogin(provider, env) {
   
   // For now, we return a JSON redirect instruction or 302
   return Response.redirect(target, 302);
+}
+
+async function handleChat(request, env) {
+  try {
+    const { prompt, messages } = await request.json();
+    
+    if (!prompt && (!messages || !Array.isArray(messages))) {
+      return new Response(JSON.stringify({ error: "Prompt or messages array is required" }), {
+        status: 400,
+        headers: { ...CORS_HEADERS, "Content-Type": "application/json" }
+      });
+    }
+
+    const API_KEY = env.OAI_API_TOKEN; // Secret env var
+    const MODEL = "Qwen/Qwen2.5-72B-Instruct"; // Enforcing high-quality model
+
+    const systemMsg = {
+      role: "system",
+      content: "You are AstroAI, an intelligent assistant created by Jordan Segovia. You are not Qwen, Alibaba, or Hugging Face. You are a helpful, harmless, and honest AI assistant."
+    };
+
+    let finalMessages;
+    if (messages) {
+      // Client sent history. Prepend system message.
+      finalMessages = [systemMsg, ...messages];
+    } else {
+      // Legacy fallback (single turn)
+      finalMessages = [
+        systemMsg,
+        { role: "user", content: prompt }
+      ];
+    }
+
+    const payload = {
+      model: MODEL,
+      messages: finalMessages,
+      stream: true,
+      max_tokens: 2048
+    };
+
+    const upstreamResponse = await fetch("https://router.huggingface.co/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${API_KEY}`
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!upstreamResponse.ok) {
+      const errText = await upstreamResponse.text();
+      return new Response(JSON.stringify({ error: "Upstream error", details: errText }), {
+        status: upstreamResponse.status,
+        headers: { ...CORS_HEADERS, "Content-Type": "application/json" }
+      });
+    }
+
+    // Forward the stream directly with SSE headers
+    return new Response(upstreamResponse.body, {
+      headers: {
+        ...CORS_HEADERS,
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        "Connection": "keep-alive"
+      }
+    });
+
+  } catch (err) {
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+      headers: { ...CORS_HEADERS, "Content-Type": "application/json" }
+    });
+  }
 }

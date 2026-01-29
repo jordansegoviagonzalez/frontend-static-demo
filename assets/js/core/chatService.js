@@ -35,9 +35,10 @@ export const chatService = {
    * @param {Object} params
    * @param {string} [params.sessionId]
    * @param {string} params.userText
+   * @param {function(string): void} [params.onUpdate] - Callback for streaming updates (receives full text so far or delta, depending on impl. Here we assume delta or we manage full text locally).
    * @returns {Promise<{session: import("./sessionService.js").Session, reply: import("./sessionService.js").Message}>}
    */
-  async sendMessage({ sessionId, userText, userMessageId }) {
+  async sendMessage({ sessionId, userText, userMessageId, onUpdate }) {
     let session = this.ensureSession(sessionId);
     const userMsg = createMessage({
       id: userMessageId || generateId(),
@@ -53,57 +54,30 @@ export const chatService = {
       userText
     });
 
-    const aiText = await hfClient.generateText(prompt);
-
+    // Create AI placeholder immediately
     const aiMsg = createMessage({
       id: generateId(),
       role: "assistant",
-      text: aiText,
+      text: "", // Start empty
       createdAt: nowIso()
     });
-
     session.messages.push(aiMsg);
+
+    // Stream handler
+    const handleChunk = (delta) => {
+      aiMsg.text += delta;
+      if (onUpdate) onUpdate(aiMsg.text); // Pass full accumulated text to UI
+    };
+
+    const aiText = await hfClient.generateText(prompt, handleChunk);
+    
+    // Ensure final text is set (handling any race conditions or non-stream fallbacks)
+    aiMsg.text = aiText;
+
     session.updatedAt = nowIso();
     
-    // -- Auto-Titling (Background Task) --
-    // If title is still default, generate one based on the FIRST user message
-    if (session.title === "New chat") {
-      // We don't await this so the UI response is fast.
-      // But we do need to save the session AGAIN after this finishes in the background.
-      this.generateTitle(session.id, userText).then(newTitle => {
-        if (newTitle) {
-          console.log(`Auto-titled session ${session.id} to: ${newTitle}`);
-        }
-      }).catch(err => {
-        console.warn("Failed to auto-title session:", err);
-      });
-    }
-
     session = sessionService.saveSession(session);
 
     return { session, reply: aiMsg };
-  },
-
-  /**
-   * Generates a short title based on the user's first message.
-   * @param {string} sessionId
-   * @param {string} userText
-   */
-  async generateTitle(sessionId, userText) {
-    const prompt = `
-<start_of_turn>user
-Summarize this message into a short 3-5 word title. Do not use quotes.
-Message: "${userText}"<end_of_turn>
-<start_of_turn>model
-`;
-    
-    let title = await hfClient.generateText(prompt);
-    title = title.replace(/["']/g, "").trim();
-    
-    if (title) {
-      sessionService.renameSession(sessionId, title);
-      return title;
-    }
-    return null;
   }
 };

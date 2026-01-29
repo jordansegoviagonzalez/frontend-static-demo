@@ -59,6 +59,24 @@ export function renderChatMessages(container, messages, { streamId } = {}) {
 }
 
 /**
+ * Updates an existing message's content in real-time.
+ * Efficiently updates innerHTML without re-rendering the whole list.
+ * @param {HTMLElement} container 
+ * @param {string} msgId 
+ * @param {string} newText 
+ */
+export function updateChatMessage(container, msgId, newText) {
+  const row = container.querySelector(`[data-msg-id="${msgId}"]`);
+  if (!row) return;
+
+  const bubble = row.querySelector(".astro-msg-bubble");
+  if (bubble) {
+    bubble.innerHTML = parseMarkdown(newText);
+    container.scrollTop = container.scrollHeight;
+  }
+}
+
+/**
  * Types out HTML content node-by-node so users see formatted text appearing,
  * rather than raw Markdown syntax.
  */

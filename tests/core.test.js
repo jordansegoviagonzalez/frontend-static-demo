@@ -18,7 +18,8 @@ describe("Core: Session Service", () => {
   });
 
   it("should save and retrieve a session", () => {
-    const newSession = sessionService.createSession({ title: "Test Chat" });
+    let newSession = sessionService.createSession({ title: "Test Chat" });
+    newSession = sessionService.saveSession(newSession); // Must save to persist
     const retrieved = sessionService.getSessionById(newSession.id);
     expect(retrieved).to.deep.equal(newSession);
   });
@@ -32,16 +33,16 @@ describe("Core: Session Service", () => {
 });
 
 describe("Core: Prompt Policy", () => {
-  it("should format the prompt correctly for Gemma", () => {
+  it("should return message array with history", () => {
     const messages = [
       { role: "user", text: "Hello" },
       { role: "assistant", text: "Hi there" }
     ];
     const newPrompt = promptPolicy.buildPrompt({ previousMessages: messages, userText: "How are you?" });
     
-    // We expect the standard chat format
-    expect(newPrompt).to.include("<start_of_turn>user\nHello<end_of_turn>");
-    expect(newPrompt).to.include("<start_of_turn>model\nHi there<end_of_turn>");
-    expect(newPrompt).to.include("<start_of_turn>user\nHow are you?<end_of_turn>");
+    expect(newPrompt).to.be.an("array").that.has.lengthOf(3);
+    expect(newPrompt[0]).to.deep.equal({ role: "user", content: "Hello" });
+    expect(newPrompt[1]).to.deep.equal({ role: "assistant", content: "Hi there" });
+    expect(newPrompt[2]).to.deep.equal({ role: "user", content: "How are you?" });
   });
 });

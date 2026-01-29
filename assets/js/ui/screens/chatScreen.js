@@ -1,6 +1,6 @@
 import { chatService } from "../../core/chatService.js";
 import { sessionService } from "../../core/sessionService.js";
-import { renderChatMessages } from "../components/chatMessageList.js";
+import { renderChatMessages, updateChatMessage } from "../components/chatMessageList.js";
 import { bindChatInput } from "../components/chatInputBar.js";
 import { initThinkingIndicator, showThinking, hideThinking } from "../thinkingIndicator.js";
 
@@ -93,7 +93,7 @@ export function renderChatScreen(root, { sessionId } = {}) {
       const currentUser = userService.getCurrentUser();
       if (!currentUser) {
         const userMsgCount = session.messages.filter(m => m.role === "user").length;
-        if (userMsgCount >= 1) {
+        if (userMsgCount >= 2) {
           const limitMsg = {
             id: Date.now().toString(),
             role: "assistant",
@@ -114,6 +114,7 @@ export function renderChatScreen(root, { sessionId } = {}) {
       // Generate ID upfront to prevent double-rendering (optimistic vs real)
       const tempId = Math.random().toString(36).slice(2) + Date.now().toString(36);
       
+      // Render user message immediately
       renderChatMessages(messagesEl, [
         ...session.messages,
         { role: "user", text, id: tempId }
@@ -121,25 +122,46 @@ export function renderChatScreen(root, { sessionId } = {}) {
 
       showThinking();
       try {
+        // Prepare AI placeholder ID
+        let aiMsgId = null;
+
         const result = await chatService.sendMessage({ 
           sessionId: session.id, 
           userText: text,
-          userMessageId: tempId 
+          userMessageId: tempId,
+          onUpdate: (fullText) => {
+            // If this is the first chunk, we might need to render the AI bubble first
+            if (!aiMsgId) {
+               // We need to find the new AI message ID from the session object? 
+               // Actually chatService creates it. 
+               // For simplicity, we re-render the list to ensure the bubble exists
+               // But re-rendering clears the typing state.
+               // Better: check if the last message is assistant and empty/partial.
+               const lastMsg = session.messages[session.messages.length - 1];
+               if (lastMsg && lastMsg.role === 'assistant') {
+                 aiMsgId = lastMsg.id;
+                 renderChatMessages(messagesEl, session.messages); // Ensure it's in the DOM
+                 hideThinking(); // Hide thinking once we start streaming
+               }
+            }
+            if (aiMsgId) {
+              updateChatMessage(messagesEl, aiMsgId, fullText);
+            }
+          }
         });
         
         // -- CRITICAL FIX: Update local session state so next Auth Check sees the new messages --
         session.messages = result.session.messages;
         session.id = result.session.id; // In case it was a new session that got a real ID
-        // -------------------------------------------------------------------------------------
-
-        // Pass streamId to trigger the typing animation for the new AI message
-        renderChatMessages(messagesEl, result.session.messages, { streamId: result.reply.id });
+        
+        // Final render to ensure everything is consistent
+        renderChatMessages(messagesEl, result.session.messages);
 
         // -- PROACTIVE LIMIT NOTIFICATION --
-        // If guest just finished their 1 free message, show the limit alert immediately.
+        // If guest just finished their 2 free messages, show the limit alert immediately.
         if (!userService.getCurrentUser()) {
            const userMsgCount = result.session.messages.filter(m => m.role === "user").length;
-           if (userMsgCount >= 1) {
+           if (userMsgCount >= 2) {
              const limitMsg = {
                id: "limit-" + Date.now(),
                role: "assistant",

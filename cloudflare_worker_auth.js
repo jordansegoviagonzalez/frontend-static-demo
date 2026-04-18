@@ -72,8 +72,44 @@ async function handleLogin(request, env) {
     name: email.split("@")[0]
   };
 
-  // Generate JWT (mock)
-  const token = btoa(JSON.stringify({ sub: user.id, exp: Date.now() + 3600000 }));
+  // Generate a secure JWT Token
+  const enc = new TextEncoder();
+  const header = { alg: "HS256", typ: "JWT" };
+  const payload = { sub: user.id, exp: Math.floor(Date.now() / 1000) + 3600 };
+  
+  const base64UrlEncode = (str) => btoa(str).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  const encodedHeader = base64UrlEncode(JSON.stringify(header));
+  const encodedPayload = base64UrlEncode(JSON.stringify(payload));
+  
+  const secretKey = env.JWT_SECRET;
+  if (!secretKey) {
+    return new Response(JSON.stringify({ error: "Server configuration error: Missing JWT secret" }), {
+      status: 500,
+      headers: { ...CORS_HEADERS, "Content-Type": "application/json" }
+    });
+  }
+  
+  const keyMaterial = await crypto.subtle.importKey(
+    "raw",
+    enc.encode(secretKey),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+  
+  const signatureBuffer = await crypto.subtle.sign(
+    "HMAC",
+    keyMaterial,
+    enc.encode(`${encodedHeader}.${encodedPayload}`)
+  );
+  
+  let binaryString = "";
+  const bytes = new Uint8Array(signatureBuffer);
+  for (let i = 0; i < bytes.byteLength; i++) {
+    binaryString += String.fromCharCode(bytes[i]);
+  }
+  const encodedSignature = base64UrlEncode(binaryString);
+  const token = `${encodedHeader}.${encodedPayload}.${encodedSignature}`;
 
   return new Response(JSON.stringify({ user, token }), {
     headers: { ...CORS_HEADERS, "Content-Type": "application/json" }

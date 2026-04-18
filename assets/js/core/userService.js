@@ -14,9 +14,11 @@ function nowIso() {
   return new Date().toISOString();
 }
 
-function hashPassword(password) {
-  // Lite demo only: do NOT use this in production.
-  return btoa(password);
+async function hashPassword(password) {
+  const msgUint8 = new TextEncoder().encode(password);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
 // Simulate network delay
@@ -61,11 +63,13 @@ export const userService = {
       throw err;
     }
 
+    const passwordHash = await hashPassword(password);
+
     const user = createUser({
       id: generateId(),
       name: name.trim(),
       email: email.trim(),
-      passwordHash: hashPassword(password),
+      passwordHash: passwordHash,
       createdAt: nowIso()
     });
 
@@ -111,7 +115,8 @@ export const userService = {
     
     // For demo convenience, if user doesn't exist but creds are valid format, mock success 
     // (This is a design choice for the demo to be frictionless, user requested "secure" so we should strict check)
-    if (!user || user.passwordHash !== hashPassword(password)) {
+    const hashedPassword = await hashPassword(password);
+    if (!user || user.passwordHash !== hashedPassword) {
        const err = new Error("Invalid credentials");
        err.validationErrors = { email: "Invalid email or password." };
        throw err;

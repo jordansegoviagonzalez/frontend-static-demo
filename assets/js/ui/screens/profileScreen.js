@@ -41,13 +41,13 @@ export function renderProfileScreen(root) {
       <form class="astro-flex-col" data-profile-form>
         <div class="astro-field">
           <label class="astro-label" for="prof-name">Name</label>
-          <input id="prof-name" name="name" class="astro-input" value="${current ? current.name : ""}" />
+          <input id="prof-name" name="name" class="astro-input" value="" />
           <div class="astro-error-text" data-error-name></div>
         </div>
 
         <div class="astro-field">
           <label class="astro-label">Email</label>
-          <input class="astro-input" value="${current ? current.email : "Guest"}" disabled />
+          <input id="prof-email" class="astro-input" value="" disabled />
         </div>
 
         <div class="astro-flex-row" style="flex-wrap: wrap;">
@@ -76,11 +76,16 @@ export function renderProfileScreen(root) {
   </section>
 `;
 
-
   const form = root.querySelector("[data-profile-form]");
   const logoutBtn = root.querySelector("[data-logout]");
   const nameInput = root.querySelector("#prof-name");
+  const emailInput = root.querySelector("#prof-email");
   const nameError = root.querySelector("[data-error-name]");
+
+  if (current) {
+    nameInput.value = current.name || "";
+    emailInput.value = current.email || "Guest";
+  }
 
   form.addEventListener("submit", (evt) => {
     evt.preventDefault();
